@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Anand Jyoti</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --sidebar-bg: #1e293b;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-gold: #d4af37;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        #login-screen {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+        }
+        .login-box {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        #dashboard-screen { display: none; min-height: 100vh; }
+        
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            position: fixed;
+            top: 0; bottom: 0; left: 0;
+            border-right: 1px solid var(--border-color);
+            padding: 20px 0;
+            z-index: 100;
+        }
+        .sidebar-logo {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .nav-menu a i { width: 30px; font-size: 1.1rem; }
+        .nav-menu a:hover, .nav-menu a.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+            border-right: 3px solid var(--accent-gold);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .admin-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 30px;
+        }
+        .stat-card i { font-size: 2.5rem; color: var(--accent-gold); margin-bottom: 15px; }
+        .stat-card h3 { font-size: 2.5rem; font-weight: 700; margin: 0; }
+        
+        .form-control, .form-select {
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+        }
+        .form-control:focus, .form-select:focus {
+            background: var(--primary-bg);
+            color: white;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+        }
+        
+        .btn-gold {
+            background: var(--accent-gold);
+            color: #000;
+            font-weight: 600;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-gold:hover { background: #b5952f; color: #000; }
+        
+        .table { color: var(--text-main); }
+        .table thead th { background: var(--sidebar-bg); border-color: var(--border-color); color: var(--accent-gold); }
+        .table tbody td { border-color: var(--border-color); background: var(--card-bg); vertical-align: middle; }
+
+        .img-preview { width: 100px; height: 60px; object-fit: cover; border-radius: 5px; }
+        .gallery-admin-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        
+        .content-section { display: none; animation: fadeIn 0.4s ease; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: 0.3s; }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+        }
+
+        /* Overrides for HTML5 QR Code Reader UI */
+        #qr-reader { border: none !important; border-radius: 10px; overflow: hidden; }
+        #qr-reader__scan_region { background: var(--primary-bg); }
+        #qr-reader__dashboard_section_csr button {
+            background: var(--accent-gold); border: none; padding: 5px 15px; border-radius: 5px; font-weight: bold; margin: 5px; color: black;
+        }
+        #qr-reader__dashboard_section_swaplink { color: var(--accent-gold) !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-box">
+            <img src="images/logo.png" alt="Logo" style="height: 60px; margin-bottom: 20px;" onerror="this.src='https://via.placeholder.com/150x50/1e293b/d4af37?text=ADMIN'">
+            <h4 class="mb-4 text-white">Admin Authentication</h4>
+            <div class="mb-3">
+                <input type="password" id="adminPassword" class="form-control text-center py-3" placeholder="Enter Master Password">
+            </div>
+            <button class="btn btn-gold w-100 py-2" onclick="checkLogin()">Access Dashboard</button>
+            <p id="loginError" class="text-danger mt-3 mb-0" style="display:none;">Incorrect Password!</p>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen">
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <h5 class="text-white mb-0" style="color: var(--accent-gold) !important;">ANAND JYOTI</h5>
+                <small class="text-muted">Command Center</small>
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showSection('sec-dashboard')" class="active" id="nav-dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#" onclick="showSection('sec-scanner')" id="nav-scanner"><i class="fas fa-qrcode"></i> Scan Tickets</a>
+                <a href="#" onclick="showSection('sec-sessions')" id="nav-sessions"><i class="fas fa-calendar-alt"></i> Manage Sessions</a>
+                <a href="#" onclick="showSection('sec-registrations')" id="nav-registrations"><i class="fas fa-users"></i> Registrations</a>
+                <a href="#" onclick="showSection('sec-gallery')" id="nav-gallery"><i class="fas fa-images"></i> Gallery</a>
+                <a href="#" onclick="logout()" class="text-danger mt-5"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            
+            <button class="btn btn-gold d-md-none mb-4" onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="fas fa-bars"></i> Menu
+            </button>
+
+            <!-- Dashboard Section -->
+            <div id="sec-dashboard" class="content-section active">
+                <h2 class="mb-4">Overview</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="admin-card stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <h3 id="statSessions">0</h3>
+                            <p class="text-muted mb-0">Total Sessions</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="admin-card stat-card">
+                            <i class="fas fa-users"></i>
+                            <h3 id="statRegs">0</h3>
+                            <p class="text-muted mb-0">Total Registrations</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="admin-card stat-card">
+                            <i class="fas fa-user-check"></i>
+                            <h3 id="statAttended">0</h3>
+                            <p class="text-muted mb-0">Total Attendees (Scanned)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR Scanner Section -->
+            <div id="sec-scanner" class="content-section">
+                <h2 class="mb-4">Ticket Scanner</h2>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="admin-card text-center">
+                            <h5 class="mb-3 text-gold">Scan QR Code</h5>
+                            <p class="text-muted small">Point your camera at the digital or printed ticket QR.</p>
+                            <div id="qr-reader" style="width: 100%; max-width: 450px; margin: auto;"></div>
+                            
+                            <hr class="my-4 border-secondary">
+                            
+                            <h5 class="mb-3">Manual Entry Fallback</h5>
+                            <div class="input-group mb-3 max-w-sm mx-auto">
+                                <input type="text" id="manualTicketInput" class="form-control" placeholder="e.g. REG-SES170-001">
+                                <button class="btn btn-gold" onclick="manualScanVerify()">Verify</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="admin-card">
+                            <h5 class="mb-4">Scan Result</h5>
+                            <div id="scanResult">
+                                <div class="alert alert-secondary text-center">
+                                    Waiting for scan...
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-5 mb-3">Recently Scanned Tickets</h5>
+                            <ul class="list-group" id="recentScansList">
+                                <!-- Populated by JS -->
+                                <li class="list-group-item bg-transparent text-muted text-center border-secondary">No recent scans</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Sessions Section -->
+            <div id="sec-sessions" class="content-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Manage Sessions</h2>
+                    <button class="btn btn-gold" onclick="openSessionForm()"><i class="fas fa-plus"></i> Add New Session</button>
+                </div>
+                
+                <div class="admin-card">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sessionsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registrations & Attendees Section -->
+            <div id="sec-registrations" class="content-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Registrations & Attendees</h2>
+                    <button class="btn btn-success" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
+                </div>
+
+                <div class="admin-card">
+                    <div class="row mb-4 g-3 align-items-center">
+                        <div class="col-md-4">
+                            <select id="filterSession" class="form-select" onchange="renderRegistrations()">
+                                <option value="ALL">All Sessions</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="filterStatus" class="form-select" onchange="renderRegistrations()">
+                                <option value="ALL">All Participants</option>
+                                <option value="ATTENDED">Completed / Attended Only</option>
+                                <option value="PENDING">Pending (Not Scanned) Only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="regTable">
+                            <thead>
+                                <tr>
+                                    <th>Reg ID</th>
+                                    <th>Name</th>
+                                    <th>Mobile</th>
+                                    <th>Session Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="regTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery Section -->
+            <div id="sec-gallery" class="content-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Manage Gallery</h2>
+                    <div>
+                        <input type="file" id="galleryUpload" accept="image/*" class="d-none" onchange="handleGalleryUpload(event)" multiple>
+                        <button class="btn btn-gold" onclick="document.getElementById('galleryUpload').click()"><i class="fas fa-upload"></i> Upload Images</button>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="row g-4" id="galleryGrid">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Add/Edit Session Modal -->
+    <div class="modal fade" id="sessionModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title" id="sessionModalTitle">Add New Session</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="sessionForm">
+                        <input type="hidden" id="formSessionId">
+                        
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Session Image (Banner)</label>
+                                <input type="file" class="form-control" id="formImage" accept="image/*">
+                                <small class="text-muted">Leave empty to keep existing image.</small>
+                                <input type="hidden" id="formExistingImage">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Session Title</label>
+                                <input type="text" class="form-control" id="formTitle" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="formDate" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Time</label>
+                                <input type="time" class="form-control" id="formTime" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Venue (or Zoom Link)</label>
+                                <input type="text" class="form-control" id="formVenue" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Max Seats</label>
+                                <input type="number" class="form-control" id="formSeats" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="formStatus">
+                                    <option value="Active">Active</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Draft">Draft</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Short Description</label>
+                                <textarea class="form-control" id="formDesc" rows="2" required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Agenda (Points)</label>
+                                <textarea class="form-control" id="formAgenda" rows="3" placeholder="1. ...&#10;2. ..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Key Benefits</label>
+                                <textarea class="form-control" id="formBenefits" rows="2" required></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-gold">Save Session</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- HTML5 QR Code Library for Scanner UI -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <script>
+        // --- Authentication ---
+        function checkLogin() {
+            const pwd = document.getElementById('adminPassword').value;
+            if(pwd === 'anandjyoti@11') {
+                sessionStorage.setItem('aj_admin_auth', 'true');
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard-screen').style.display = 'block';
+                initDashboard();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('aj_admin_auth');
+            location.reload();
+        }
+
+        if(sessionStorage.getItem('aj_admin_auth') === 'true') {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'block';
+            initDashboard();
+        }
+
+        // --- Navigation ---
+        function showSection(secId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(secId).classList.add('active');
+            
+            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+            document.getElementById('nav-' + secId.split('-')[1]).classList.add('active');
+
+            // Handle Camera Initialization strictly when entering scanner tab
+            if(secId === 'sec-scanner') {
+                initScanner();
+            } else if(html5QrcodeScanner) {
+                // Clear camera when leaving tab to save battery
+                html5QrcodeScanner.clear().catch(e => console.error("Failed to clear scanner", e));
+                html5QrcodeScanner = null;
+            }
+        }
+
+        // --- Data Variables ---
+        let sessions = [];
+        let registrations = [];
+        let gallery = [];
+        let recentScans = [];
+
+        function initDashboard() {
+            sessions = JSON.parse(localStorage.getItem('aj_sessions')) || [];
+            registrations = JSON.parse(localStorage.getItem('aj_registrations')) || [];
+            gallery = JSON.parse(localStorage.getItem('aj_gallery')) || [];
+            
+            updateStats();
+            renderSessions();
+            populateSessionFilter();
+            renderRegistrations();
+            renderGallery();
+        }
+
+        function updateStats() {
+            document.getElementById('statSessions').innerText = sessions.length;
+            document.getElementById('statRegs').innerText = registrations.length;
+            const attendedCount = registrations.filter(r => r.attended === true).length;
+            document.getElementById('statAttended').innerText = attendedCount;
+        }
+
+        // --- TICKETING & QR SCANNER LOGIC ---
+
+        let html5QrcodeScanner = null;
+        let isProcessingScan = false;
+
+        function initScanner() {
+            if(!html5QrcodeScanner) {
+                html5QrcodeScanner = new Html5QrcodeScanner(
+                    "qr-reader", 
+                    { fps: 10, qrbox: {width: 250, height: 250}, rememberLastUsedCamera: true },
+                    false
+                );
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (isProcessingScan) return; // Prevent multiple fires
+            isProcessingScan = true;
+
+            processTicketScan(decodedText);
+
+            // Delay next scan slightly
+            setTimeout(() => { isProcessingScan = false; }, 2000);
+        }
+
+        function onScanFailure(error) {
+            // Background noise, ignoring
+        }
+
+        function manualScanVerify() {
+            const input = document.getElementById('manualTicketInput').value.trim();
+            if(input) {
+                processTicketScan(input);
+                document.getElementById('manualTicketInput').value = '';
+            }
+        }
+
+        function processTicketScan(ticketId) {
+            let resultDiv = document.getElementById('scanResult');
+            let index = registrations.findIndex(r => r.id === ticketId);
+
+            if (index > -1) {
+                const ticket = registrations[index];
+                
+                if (ticket.attended) {
+                    // Already Scanned / Used
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-warning border-warning">
+                            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> WARNING: TICKET USED!</h4>
+                            <p class="mb-0">Ticket ID: <b>${ticketId}</b> belongs to <b>${ticket.name}</b>, but it was already scanned and marked attended.</p>
+                        </div>
+                    `;
+                } else {
+                    // Valid Scan -> Mark Attended
+                    registrations[index].attended = true;
+                    localStorage.setItem('aj_registrations', JSON.stringify(registrations));
+                    
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success border-success">
+                            <h4 class="alert-heading"><i class="fas fa-check-circle"></i> ACCESS GRANTED!</h4>
+                            <p class="mb-0">Ticket verified for <b>${ticket.name}</b>.</p>
+                            <small>Session: ${ticket.sessionName}</small>
+                        </div>
+                    `;
+                    
+                    // Add to recent list
+                    addRecentScan(ticket.name, ticketId, 'Success');
+                    
+                    // Update lists
+                    updateStats();
+                    renderRegistrations();
+                }
+            } else {
+                // Invalid / Fake Ticket
+                resultDiv.innerHTML = `
+                    <div class="alert alert-danger border-danger">
+                        <h4 class="alert-heading"><i class="fas fa-times-circle"></i> ERROR: INVALID TICKET</h4>
+                        <p class="mb-0">The ticket ID <b>${ticketId}</b> does not exist in our system.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function addRecentScan(name, id, status) {
+            recentScans.unshift({ name, id, time: new Date().toLocaleTimeString() });
+            if (recentScans.length > 5) recentScans.pop();
+            
+            const ul = document.getElementById('recentScansList');
+            ul.innerHTML = '';
+            recentScans.forEach(scan => {
+                ul.innerHTML += `<li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>${scan.name}</strong><br>
+                        <small class="text-muted">${scan.id}</small>
+                    </div>
+                    <span class="badge bg-success">${scan.time}</span>
+                </li>`;
+            });
+        }
+
+        // --- Registrations Data Logic ---
+
+        function populateSessionFilter() {
+            const filter = document.getElementById('filterSession');
+            filter.innerHTML = '<option value="ALL">All Sessions</option>';
+            sessions.forEach(s => {
+                filter.innerHTML += `<option value="${s.id}">${s.title} (${s.date})</option>`;
+            });
+        }
+
+        function renderRegistrations() {
+            const sessionFilter = document.getElementById('filterSession').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            const tbody = document.getElementById('regTableBody');
+            tbody.innerHTML = '';
+            
+            let filteredRegs = registrations;
+            
+            if(sessionFilter !== 'ALL') {
+                filteredRegs = filteredRegs.filter(r => r.sessionId === sessionFilter);
+            }
+
+            if(statusFilter === 'ATTENDED') {
+                filteredRegs = filteredRegs.filter(r => r.attended === true);
+            } else if (statusFilter === 'PENDING') {
+                filteredRegs = filteredRegs.filter(r => r.attended !== true);
+            }
+
+            filteredRegs.slice().reverse().forEach(r => {
+                const attendedBadge = r.attended 
+                    ? '<span class="badge bg-success"><i class="fas fa-check"></i> Attended</span>'
+                    : '<span class="badge bg-secondary">Pending</span>';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><small class="text-gold">${r.id}</small></td>
+                        <td class="fw-bold">${r.name}</td>
+                        <td>${r.mobile}</td>
+                        <td><small>${r.sessionName}</small></td>
+                        <td>${attendedBadge}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteReg('${r.id}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (filteredRegs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">No participants found for this criteria.</td></tr>`;
+            }
+        }
+
+        function deleteReg(id) {
+            if(confirm('Delete this registration?')) {
+                registrations = registrations.filter(x => x.id !== id);
+                localStorage.setItem('aj_registrations', JSON.stringify(registrations));
+                initDashboard();
+            }
+        }
+
+        function exportToExcel() {
+            if(registrations.length === 0) {
+                alert("No registrations to export.");
+                return;
+            }
+            
+            const sessionFilter = document.getElementById('filterSession').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            
+            let dataToExport = registrations;
+            let fileName = 'All_Registrations.xlsx';
+            
+            if(sessionFilter !== 'ALL') {
+                dataToExport = dataToExport.filter(r => r.sessionId === sessionFilter);
+                const s = sessions.find(x => x.id === sessionFilter);
+                if(s) fileName = `${s.title.replace(/\s+/g, '_')}_Regs.xlsx`;
+            }
+
+            if(statusFilter === 'ATTENDED') dataToExport = dataToExport.filter(r => r.attended === true);
+            if(statusFilter === 'PENDING') dataToExport = dataToExport.filter(r => r.attended !== true);
+
+            const wsData = dataToExport.map(r => ({
+                "Registration ID": r.id,
+                "Name": r.name,
+                "Mobile": r.mobile,
+                "Email": r.email,
+                "Session": r.sessionName,
+                "Date Registered": r.date,
+                "Attendance Status": r.attended ? "ATTENDED (Scanned)" : "Pending"
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(wsData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Registrations");
+            XLSX.writeFile(wb, fileName);
+        }
+
+        // --- Sessions Logic ---
+
+        const sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'));
+
+        function renderSessions() {
+            const tbody = document.getElementById('sessionsTableBody');
+            tbody.innerHTML = '';
+            
+            sessions.forEach(s => {
+                let badge = s.status === 'Active' ? 'bg-success' : (s.status === 'Completed' ? 'bg-secondary' : 'bg-warning');
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${s.image}" class="img-preview" onerror="this.src='https://via.placeholder.com/100x60'"></td>
+                        <td class="fw-bold">${s.title}</td>
+                        <td>${s.date} <br><small class="text-muted">${s.time}</small></td>
+                        <td><span class="badge ${badge}">${s.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-light me-1" onclick="editSession('${s.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSession('${s.id}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openSessionForm() {
+            document.getElementById('sessionForm').reset();
+            document.getElementById('formSessionId').value = '';
+            document.getElementById('formExistingImage').value = '';
+            document.getElementById('sessionModalTitle').innerText = 'Add New Session';
+            sessionModal.show();
+        }
+
+        function editSession(id) {
+            const s = sessions.find(x => x.id === id);
+            if(!s) return;
+            
+            document.getElementById('formSessionId').value = s.id;
+            document.getElementById('formExistingImage').value = s.image;
+            document.getElementById('formTitle').value = s.title;
+            document.getElementById('formDate').value = s.date;
+            document.getElementById('formTime').value = s.time;
+            document.getElementById('formVenue').value = s.venue;
+            document.getElementById('formSeats').value = s.seats;
+            document.getElementById('formStatus').value = s.status;
+            document.getElementById('formDesc').value = s.description;
+            document.getElementById('formAgenda').value = s.agenda;
+            document.getElementById('formBenefits').value = s.benefits;
+            
+            document.getElementById('sessionModalTitle').innerText = 'Edit Session';
+            sessionModal.show();
+        }
+
+        function deleteSession(id) {
+            if(confirm('Delete this session? Past registrations won\'t be affected.')) {
+                sessions = sessions.filter(x => x.id !== id);
+                localStorage.setItem('aj_sessions', JSON.stringify(sessions));
+                initDashboard();
+            }
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        document.getElementById('sessionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('formImage');
+            let imageUrl = document.getElementById('formExistingImage').value;
+
+            if (fileInput.files.length > 0) {
+                imageUrl = await fileToBase64(fileInput.files[0]);
+            } else if (!imageUrl) {
+                imageUrl = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1000';
+            }
+
+            const id = document.getElementById('formSessionId').value || 'SES' + Date.now();
+            
+            const sessionData = {
+                id: id,
+                image: imageUrl,
+                title: document.getElementById('formTitle').value,
+                date: document.getElementById('formDate').value,
+                time: document.getElementById('formTime').value,
+                venue: document.getElementById('formVenue').value,
+                seats: document.getElementById('formSeats').value,
+                status: document.getElementById('formStatus').value,
+                description: document.getElementById('formDesc').value,
+                agenda: document.getElementById('formAgenda').value,
+                benefits: document.getElementById('formBenefits').value
+            };
+
+            const index = sessions.findIndex(x => x.id === id);
+            if(index > -1) { sessions[index] = sessionData; } 
+            else { sessions.push(sessionData); }
+
+            localStorage.setItem('aj_sessions', JSON.stringify(sessions));
+            sessionModal.hide();
+            initDashboard();
+        });
+
+        // --- Gallery ---
+
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = '';
+            
+            if(gallery.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center py-5 text-muted">No images in gallery. Upload some!</div>';
+                return;
+            }
+
+            gallery.forEach((imgData, index) => {
+                grid.innerHTML += `
+                    <div class="col-lg-3 col-md-4 col-6 text-center">
+                        <div class="position-relative" style="background:var(--card-bg); padding:10px; border-radius:15px; border:1px solid var(--border-color);">
+                            <img src="${imgData}" class="gallery-admin-img">
+                            <button class="btn btn-sm btn-danger w-100" onclick="deleteGalleryImage(${index})"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function handleGalleryUpload(e) {
+            const files = e.target.files;
+            if(files.length === 0) return;
+            
+            for(let i=0; i<files.length; i++) {
+                try {
+                    let base64 = await compressImage(files[i]);
+                    gallery.push(base64);
+                } catch(err) { console.error("Error", err); }
+            }
+            
+            try {
+                localStorage.setItem('aj_gallery', JSON.stringify(gallery));
+                initDashboard();
+            } catch(e) {
+                alert("Storage Limit Exceeded! Delete some images first.");
+                gallery.pop(); 
+            }
+            e.target.value = '';
+        }
+
+        function deleteGalleryImage(index) {
+            if(confirm("Delete this image?")) {
+                gallery.splice(index, 1);
+                localStorage.setItem('aj_gallery', JSON.stringify(gallery));
+                initDashboard();
+            }
+        }
+
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width, h = img.height;
+                        if (w > h && w > 800) { h *= 800 / w; w = 800; } 
+                        else if (h > 800) { w *= 800 / h; h = 800; }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', 0.7)); 
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

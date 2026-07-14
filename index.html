@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anand Jyoti | Certified Life Coach</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/logo.png">
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="Anand Jyoti - Certified Life Coach. Enlightening the Flame of Joy & Prosperity Within You.">
+    <meta name="keywords" content="Life Coach, Anand Jyoti, Anand Labade, Personal Growth, Healing, Financial Freedom">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-dark: #050b14;
+            --secondary-dark: #0a192f;
+            --primary-gold: #D4AF37;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --text-light: #F8FAFC;
+            --text-gray: #cbd5e1;
+            --glass-bg: rgba(10, 25, 47, 0.4);
+            --glass-border: rgba(212, 175, 55, 0.2);
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            color: var(--text-light);
+        }
+
+        .text-gold { color: var(--primary-gold); }
+        .text-gold-gradient {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Global Components --- */
+        .btn-gold {
+            background: var(--gold-gradient);
+            color: var(--primary-dark);
+            font-weight: 600;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-gold:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+            color: var(--primary-dark);
+        }
+
+        .btn-outline-gold {
+            background: transparent;
+            color: var(--primary-gold);
+            border: 2px solid var(--primary-gold);
+            font-weight: 600;
+            padding: 10px 26px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-outline-gold:hover {
+            background: var(--gold-gradient);
+            color: var(--primary-dark);
+            border-color: transparent;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        /* --- Top Marquee --- */
+        .top-marquee {
+            background: var(--secondary-dark);
+            color: var(--primary-gold);
+            padding: 8px 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            z-index: 1040;
+            position: relative;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            transition: all 0.4s ease;
+            z-index: 1030;
+            background: transparent;
+        }
+        .navbar.scrolled {
+            background: rgba(5, 11, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .nav-inner {
+            padding: 15px 15px;
+            transition: all 0.4s ease;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .navbar.scrolled .nav-inner {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .navbar-brand img { height: 50px; transition: 0.3s; }
+        .navbar-nav .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: 0.3s;
+            position: relative;
+        }
+        .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+            color: var(--primary-gold) !important;
+        }
+        .navbar-nav .nav-link::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px;
+            background: var(--primary-gold); transition: 0.3s;
+        }
+        .navbar-nav .nav-link:hover::after { width: 100%; }
+        .dropdown-menu {
+            background: var(--secondary-dark);
+            border: 1px solid var(--glass-border);
+        }
+        .dropdown-item { color: var(--text-light); transition: 0.3s; }
+        .dropdown-item:hover { background: var(--glass-bg); color: var(--primary-gold); }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            padding-top: 130px;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('images/herosection.jpg') center/cover no-repeat;
+            filter: brightness(0.35) blur(2px);
+            transform: scale(1.05);
+            animation: subtleZoom 20s infinite alternate ease-in-out;
+            z-index: -2;
+        }
+        @keyframes subtleZoom {
+            0% { transform: scale(1.05); }
+            100% { transform: scale(1.15); }
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(5,11,20,0.95) 0%, rgba(5,11,20,0.7) 50%, rgba(5,11,20,0.2) 100%);
+            z-index: -1;
+        }
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+        .hero-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-gray);
+            margin-bottom: 30px;
+        }
+        .hero-slogan {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--primary-gold);
+            margin-top: 30px;
+            border-left: 3px solid var(--primary-gold);
+            padding-left: 15px;
+        }
+        .hero-img-container {
+            position: relative;
+            z-index: 2;
+        }
+        .hero-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            /* Completely removed drop-shadow to prevent any dark rendering around the PNG */
+            animation: floating 6s ease-in-out infinite;
+            background-color: transparent !important;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .wave-divider {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            overflow: hidden;
+            line-height: 0;
+        }
+        .wave-divider svg { display: block; width: calc(100% + 1.3px); height: 70px; }
+        .wave-divider .shape-fill { fill: var(--primary-dark); }
+
+        /* --- Scrolling Session Bar --- */
+        .session-ticker {
+            background: var(--gold-gradient);
+            padding: 12px 0;
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 1.1rem;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+        .ticker-wrap {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 25s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+        .ticker-item { margin: 0 40px; display: inline-block; }
+
+        /* --- Sections General --- */
+        .section-padding { padding: 100px 0; }
+        .section-title {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-gray);
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-inline: auto;
+        }
+
+        /* --- Services --- */
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--glass-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: var(--primary-gold);
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+            transition: 0.4s;
+        }
+        .glass-card:hover .service-icon {
+            background: var(--gold-gradient);
+            color: var(--primary-dark);
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* --- Upcoming Sessions --- */
+        .session-card {
+            padding: 0;
+            overflow: hidden;
+        }
+        .session-img-wrap {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+        .session-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+        .session-card:hover .session-img-wrap img {
+            transform: scale(1.1);
+        }
+        .session-date-badge {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: var(--gold-gradient);
+            color: var(--primary-dark);
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .session-content { padding: 25px; }
+
+        /* --- Modals (Premium Design) --- */
+        .modal-content {
+            background: var(--secondary-dark);
+            border: 1px solid var(--primary-gold);
+            border-radius: 20px;
+            color: var(--text-light);
+        }
+        .modal-header {
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .modal-footer {
+            border-top: 1px solid var(--glass-border);
+        }
+        .form-control {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .form-control:focus {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary-gold);
+            color: white;
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+        }
+        .form-label { color: var(--text-gray); }
+
+        /* --- Gallery --- */
+        .gallery-item {
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+        .gallery-item::after {
+            content: '\f00e';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 25, 47, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-gold);
+            opacity: 0;
+            transition: 0.5s;
+        }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item:hover::after { opacity: 1; }
+
+        /* --- Footer --- */
+        .footer {
+            background: #02060c;
+            padding: 60px 0 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            color: var(--text-light);
+            margin-right: 10px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .social-links a:hover {
+            background: var(--primary-gold);
+            color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 991px) {
+            .hero-section { padding-top: 150px; }
+            .hero-title { font-size: 2.8rem; }
+            .hero-section { text-align: center; }
+            .hero-img { max-height: 45vh; margin-top: 20px; } 
+            .hero-slogan { border-left: none; border-top: 3px solid var(--primary-gold); padding-top: 15px; margin-inline: auto; }
+            .navbar-collapse { background: var(--secondary-dark); padding: 20px; border-radius: 10px; margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top p-0 flex-column" id="mainNav">
+        <div class="container nav-inner d-flex align-items-center justify-content-between">
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" alt="Anand Jyoti Logo" style="background-color: transparent !important; border: none; box-shadow: none; object-fit: contain;">
+            </a>
+            <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-gold fs-2"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            Sessions
+                        </a>
+                        <ul class="dropdown-menu" id="navSessionDropdown" aria-labelledby="navbarDropdown">
+                            <!-- Populated dynamically -->
+                            <li><a class="dropdown-item" href="#sessions">View All Sessions</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a href="#sessions" class="btn-gold px-4 py-2" style="font-size: 0.9rem;">Register Now</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Top Marquee -->
+        <div class="top-marquee w-100" style="border-top: 1px solid rgba(212, 175, 55, 0.2);">
+            <marquee behavior="scroll" direction="left" scrollamount="5">
+                ✨ <span class="text-white">ANAND JYOTI</span> - Enlightening the Flame of Joy & Prosperity Within You ✨ Join our upcoming transformation sessions!
+            </marquee>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="container relative z-10">
+            <div class="row align-items-center">
+                <div class="col-lg-7" data-aos="fade-right" data-aos-duration="1500">
+                    <h1 class="hero-title"><span class="text-gold-gradient">ANAND JYOTI</span></h1>
+                    <h2 class="hero-subtitle">Certified Life Coach</h2>
+                    <p class="lead text-gray mb-4" style="max-width: 500px;">
+                        Helping You Transform <br>
+                        <strong class="text-white">Relationships • Career • Financial Life • Healing • Personal Growth</strong>
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap justify-content-lg-start justify-content-center">
+                        <a href="#sessions" class="btn-gold">Register Now <i class="fas fa-arrow-right ms-2"></i></a>
+                        <a href="#services" class="btn-outline-gold">Explore Services</a>
+                    </div>
+                    <div class="hero-slogan">
+                        "Enlightening the Flame of Joy & Prosperity Within You"
+                    </div>
+                </div>
+                <div class="col-lg-5 text-center mt-5 mt-lg-0 hero-img-container" data-aos="zoom-in" data-aos-duration="2000">
+                    <img src="images/sir.png" alt="Anand Labade" class="hero-img" style="background-color: transparent !important; border: none; box-shadow: none; outline: none; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+        <div class="wave-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,123.15,192.27,109.8,236.4,100.23,279.1,77.37,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Scrolling Sessions Bar -->
+    <div class="session-ticker" id="sessionTickerBox">
+        <div class="ticker-wrap" id="tickerWrap">
+            <!-- Dynamic items loaded here -->
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="section-padding">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Completely removed the div generating a gold blurred background behind the image -->
+                <div class="col-lg-5 mb-5 mb-lg-0 text-center" data-aos="fade-right">
+                    <img src="images/sir.png" alt="Anand Labade" class="img-fluid" style="background-color: transparent !important; border: none; box-shadow: none; object-fit: contain;">
+                </div>
+                <div class="col-lg-7 ps-lg-5" data-aos="fade-left">
+                    <h5 class="text-gold mb-2">About The Coach</h5>
+                    <h2 class="section-title text-start mb-4">Meet <span class="text-gold-gradient">Anand Labade</span></h2>
+                    <p class="lead mb-4">Anand Labade is a highly sought-after Certified Life Coach, dedicated to empowering individuals to break through their limitations and achieve holistic success.</p>
+                    
+                    <div class="row g-4 mt-2">
+                        <div class="col-md-6">
+                            <div class="glass-card p-4 h-100">
+                                <i class="fas fa-eye text-gold fs-2 mb-3"></i>
+                                <h4 class="h5">Our Vision</h4>
+                                <p class="text-gray mb-0 small">To create a world where every individual awakens their inner potential, living a life of profound joy, prosperity, and purpose.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="glass-card p-4 h-100">
+                                <i class="fas fa-bullseye text-gold fs-2 mb-3"></i>
+                                <h4 class="h5">Our Mission</h4>
+                                <p class="text-gray mb-0 small">To provide transformative coaching that heals past traumas, rebuilds relationships, and paves the path for financial and career excellence.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section-padding" style="background: var(--secondary-dark);">
+        <div class="container">
+            <h5 class="text-gold text-center mb-2">What We Offer</h5>
+            <h2 class="section-title">Transformational <span class="text-gold-gradient">Coaching Programs</span></h2>
+            <p class="section-subtitle">Tailored methodologies designed to elevate every aspect of your life.</p>
+
+            <div class="row g-4">
+                <!-- Services -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="glass-card h-100 text-center">
+                        <div class="service-icon mx-auto"><i class="fas fa-child"></i></div>
+                        <h3 class="h4 mb-3">Parental Coaching</h3>
+                        <p class="text-gold fst-italic mb-3">"Build stronger bonds with your child."</p>
+                        <p class="text-gray small mb-4">Master the art of conscious parenting. Resolve conflicts, understand child psychology, and nurture a deeply connected family environment.</p>
+                        <a href="#contact" class="btn-outline-gold btn-sm">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="glass-card h-100 text-center">
+                        <div class="service-icon mx-auto"><i class="fas fa-spa"></i></div>
+                        <h3 class="h4 mb-3">Healing Sessions</h3>
+                        <p class="text-gold fst-italic mb-3">"Transform stress into strength."</p>
+                        <p class="text-gray small mb-4">Release deep-rooted emotional baggage. Our guided healing processes help you overcome anxiety, past trauma, and find inner peace.</p>
+                        <a href="#contact" class="btn-outline-gold btn-sm">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="glass-card h-100 text-center">
+                        <div class="service-icon mx-auto"><i class="fas fa-chart-line"></i></div>
+                        <h3 class="h4 mb-3">Financial Coaching</h3>
+                        <p class="text-gold fst-italic mb-3">"Turn worries into freedom."</p>
+                        <p class="text-gray small mb-4">Reprogram your money mindset. Learn actionable strategies for wealth creation, debt management, and achieving true financial independence.</p>
+                        <a href="#contact" class="btn-outline-gold btn-sm">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 offset-lg-2" data-aos="fade-up" data-aos-delay="400">
+                    <div class="glass-card h-100 text-center">
+                        <div class="service-icon mx-auto"><i class="fas fa-heart"></i></div>
+                        <h3 class="h4 mb-3">Relational Coaching</h3>
+                        <p class="text-gold fst-italic mb-3">"Where trust grows, love flows."</p>
+                        <p class="text-gray small mb-4">Reignite the spark in your relationships. Improve communication, resolve intimacy blocks, and build lasting, meaningful connections.</p>
+                        <a href="#contact" class="btn-outline-gold btn-sm">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="glass-card h-100 text-center">
+                        <div class="service-icon mx-auto"><i class="fas fa-briefcase"></i></div>
+                        <h3 class="h4 mb-3">Career Growth</h3>
+                        <p class="text-gold fst-italic mb-3">"Your next big step starts now."</p>
+                        <p class="text-gray small mb-4">Unlock your professional potential. Discover your true calling, overcome workplace stagnation, and strategize for leadership roles.</p>
+                        <a href="#contact" class="btn-outline-gold btn-sm">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Sessions -->
+    <section id="sessions" class="section-padding">
+        <div class="container">
+            <h5 class="text-gold text-center mb-2">Join Us</h5>
+            <h2 class="section-title">Upcoming <span class="text-gold-gradient">Masterclasses</span></h2>
+            <p class="section-subtitle">Secure your seat for our highly anticipated live sessions.</p>
+
+            <div class="row g-4" id="sessionsContainer">
+                <div class="text-center text-gray py-5" id="noSessionsMsg">
+                    <i class="fas fa-calendar-times fs-1 mb-3 text-gold"></i>
+                    <h4>No Upcoming Sessions Currently</h4>
+                    <p>Please check back later or contact us for private coaching.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="section-padding" style="background: var(--secondary-dark);">
+        <div class="container">
+            <h5 class="text-gold text-center mb-2">Memories</h5>
+            <h2 class="section-title">Previous <span class="text-gold-gradient">Workshops</span></h2>
+            
+            <div class="row g-3 mt-4" id="galleryContainer">
+                <div class="col-12 text-center text-gray py-5" id="noGalleryMsg">
+                    <p>No Workshop Images Yet. Check back soon!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section-padding">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-5" data-aos="fade-right">
+                    <h2 class="section-title text-start">Get In <span class="text-gold-gradient">Touch</span></h2>
+                    <p class="text-gray mb-5">Ready to transform your life? Reach out to our support team to book a private consultation or inquire about our programs.</p>
+                    
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="service-icon mb-0 me-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <h5 class="mb-1">Call Us</h5>
+                            <p class="text-gray mb-0">+91 98901 96671</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="service-icon mb-0 me-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <h5 class="mb-1">Email Us</h5>
+                            <p class="text-gray mb-0">contact@anandjyoti.com</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon mb-0 me-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <h5 class="mb-1">Location</h5>
+                            <p class="text-gray mb-0">Pune, Maharashtra, India</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7" data-aos="fade-left">
+                    <div class="glass-card">
+                        <h4 class="mb-4">Send a Message</h4>
+                        <form onsubmit="sendToWhatsApp(event)">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Your Name</label>
+                                    <input type="text" id="contactName" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" id="contactPhone" class="form-control" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" id="contactEmail" class="form-control" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">How can we help you?</label>
+                                    <textarea id="contactMessage" class="form-control" rows="4" required></textarea>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn-gold w-100">Send Message via WhatsApp <i class="fab fa-whatsapp ms-2"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4">
+                    <img src="images/logo.png" alt="Logo" class="mb-3" style="height: 60px; background-color: transparent !important; border: none; box-shadow: none; object-fit: contain;">
+                    <h4 class="text-gold-gradient mb-3">ANAND JYOTI</h4>
+                    <p class="text-gray small">Enlightening the Flame of Joy & Prosperity Within You. Transform your life today with proven coaching methodologies.</p>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-4">Quick Links</h5>
+                    <ul class="list-unstyled text-gray small lh-lg">
+                        <li><a href="#home" class="text-gray text-decoration-none hover-gold">Home</a></li>
+                        <li><a href="#about" class="text-gray text-decoration-none hover-gold">About Coach</a></li>
+                        <li><a href="#sessions" class="text-gray text-decoration-none hover-gold">Masterclasses</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Our Services</h5>
+                    <ul class="list-unstyled text-gray small lh-lg">
+                        <li>Parental Coaching</li>
+                        <li>Healing Sessions</li>
+                        <li>Financial Coaching</li>
+                        <li>Relational Coaching</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5 class="text-white mb-4">Connect</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center border-top border-secondary pt-4 text-gray small">
+                <p>&copy; 2026 Anand Jyoti. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Session Details Modal -->
+    <div class="modal fade" id="sessionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass-card p-0">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 p-md-5 pt-0" id="sessionModalBody">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Form Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title text-gold">Register for Session</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <h6 id="regSessionName" class="text-white mb-4">Session Name</h6>
+                    <form id="registrationForm">
+                        <input type="hidden" id="regSessionId">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="regName" class="form-control" required placeholder="Enter your full name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" id="regMobile" class="form-control" required pattern="[0-9]{10}" placeholder="10 digit mobile number">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="regEmail" class="form-control" required placeholder="your@email.com">
+                        </div>
+                        
+                        <button type="submit" class="btn-gold w-100" id="btnRegister">Complete Registration & Get Ticket</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- jsPDF for Ticket Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- QRCode JS Library for real scannable QR Code generation -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+    <script>
+        // Initialize Animations
+        AOS.init({ once: true, offset: 50 });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // --- Data Loading & Rendering ---
+        
+        function getSessions() {
+            return JSON.parse(localStorage.getItem('aj_sessions')) || [];
+        }
+
+        // Add Mock Data if empty
+        if(getSessions().length === 0) {
+            const mockSession = [{
+                id: "SES" + Date.now().toString(),
+                image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1000',
+                title: 'The Ultimate Healing Masterclass',
+                description: 'A 3-hour intensive workshop designed to clear mental blocks and manifest abundance.',
+                agenda: '1. Introduction to Inner Healing\n2. Identifying Subconscious Blocks\n3. The Meditation Process\n4. Q&A',
+                benefits: 'Overcome anxiety, build unshakable confidence, learn daily meditation practices.',
+                date: '2026-08-15',
+                time: '10:00 AM',
+                venue: 'Grand Hyatt, Pune',
+                seats: '50',
+                status: 'Active'
+            }];
+            localStorage.setItem('aj_sessions', JSON.stringify(mockSession));
+        }
+
+        function loadFrontendData() {
+            const sessions = getSessions().filter(s => s.status === 'Active');
+            
+            const container = document.getElementById('sessionsContainer');
+            const noMsg = document.getElementById('noSessionsMsg');
+            
+            if(sessions.length > 0) {
+                noMsg.style.display = 'none';
+                container.innerHTML = '';
+                
+                sessions.forEach(session => {
+                    const html = `
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                            <div class="glass-card session-card">
+                                <div class="session-img-wrap">
+                                    <div class="session-date-badge">
+                                        ${new Date(session.date).getDate()}<br>
+                                        <small>${new Date(session.date).toLocaleString('default', { month: 'short' })}</small>
+                                    </div>
+                                    <img src="${session.image}" alt="${session.title}">
+                                </div>
+                                <div class="session-content">
+                                    <h4 class="mb-3 text-gold-gradient">${session.title}</h4>
+                                    <div class="d-flex text-gray small mb-3 flex-wrap gap-2">
+                                        <span><i class="far fa-clock text-gold"></i> ${session.time}</span>
+                                        <span><i class="fas fa-map-marker-alt text-gold"></i> ${session.venue}</span>
+                                    </div>
+                                    <p class="text-gray mb-4" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${session.description}</p>
+                                    <button class="btn-outline-gold w-100" onclick="openSessionModal('${session.id}')">View Details & Register</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                });
+            }
+
+            const navDrop = document.getElementById('navSessionDropdown');
+            navDrop.innerHTML = '';
+            sessions.slice(0, 3).forEach(s => {
+                navDrop.innerHTML += `<li><a class="dropdown-item" href="javascript:void(0)" onclick="openSessionModal('${s.id}')">${s.title}</a></li>`;
+            });
+            navDrop.innerHTML += `<li><hr class="dropdown-divider bg-secondary"></li><li><a class="dropdown-item text-gold" href="#sessions">View All</a></li>`;
+
+            const tickerWrap = document.getElementById('tickerWrap');
+            if(sessions.length > 0) {
+                let tickerStr = '';
+                sessions.forEach(s => {
+                    tickerStr += `<span class="ticker-item">🔥 Upcoming: ${s.title} on ${s.date} - <a href="javascript:void(0)" onclick="openSessionModal('${s.id}')" class="text-dark text-decoration-underline">Register Now</a></span>`;
+                });
+                tickerWrap.innerHTML = tickerStr + tickerStr; 
+            }
+
+            const gallery = JSON.parse(localStorage.getItem('aj_gallery')) || [];
+            const galContainer = document.getElementById('galleryContainer');
+            const noGalMsg = document.getElementById('noGalleryMsg');
+            
+            if(gallery.length > 0) {
+                noGalMsg.style.display = 'none';
+                galContainer.innerHTML = '';
+                gallery.forEach(imgData => {
+                    galContainer.innerHTML += `
+                        <div class="col-lg-3 col-md-4 col-6" data-aos="zoom-in">
+                            <div class="gallery-item" onclick="window.open('${imgData}', '_blank')">
+                                <img src="${imgData}" alt="Workshop Memory">
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        let currentSessionForReg = null;
+        const sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'));
+        const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+
+        window.openSessionModal = function(id) {
+            const sessions = getSessions();
+            const s = sessions.find(x => x.id === id);
+            if(!s) return;
+            
+            currentSessionForReg = s;
+            
+            const body = document.getElementById('sessionModalBody');
+            body.innerHTML = `
+                <img src="${s.image}" style="width: 100%; height: auto; max-height: 250px; object-fit: cover; border-radius: 15px; margin-top: 15px; margin-bottom: 20px;" class="shadow">
+                <h2 class="text-gold-gradient mb-3 fs-3 fs-md-2">${s.title}</h2>
+                <div class="row mb-4 text-gray small">
+                    <div class="col-sm-6 mb-2"><i class="far fa-calendar text-gold me-2"></i> Date: ${s.date}</div>
+                    <div class="col-sm-6 mb-2"><i class="far fa-clock text-gold me-2"></i> Time: ${s.time}</div>
+                    <div class="col-sm-6 mb-2"><i class="fas fa-map-marker-alt text-gold me-2"></i> Venue: ${s.venue}</div>
+                    <div class="col-sm-6 mb-2"><i class="fas fa-users text-gold me-2"></i> Seats Limit: ${s.seats}</div>
+                </div>
+                <h5 class="text-white mt-4">Description</h5>
+                <p class="text-gray small">${s.description.replace(/\n/g, '<br>')}</p>
+                <h5 class="text-white mt-4">Agenda</h5>
+                <p class="text-gray small">${s.agenda.replace(/\n/g, '<br>')}</p>
+                <h5 class="text-white mt-4">Benefits</h5>
+                <p class="text-gray small">${s.benefits.replace(/\n/g, '<br>')}</p>
+                
+                <div class="text-center mt-4 mb-2">
+                    <button class="btn-gold w-100 py-3 rounded-pill fw-bold" onclick="openRegisterModal()">Book My Seat Now</button>
+                </div>
+            `;
+            sessionModal.show();
+        };
+
+        window.openRegisterModal = function() {
+            sessionModal.hide();
+            document.getElementById('regSessionId').value = currentSessionForReg.id;
+            document.getElementById('regSessionName').innerText = "Registering for: " + currentSessionForReg.title;
+            registerModal.show();
+        };
+
+        // --- Registration & Real QR Ticket Generation ---
+
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btnRegister');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            const sessionId = document.getElementById('regSessionId').value;
+            let registrations = JSON.parse(localStorage.getItem('aj_registrations')) || [];
+            
+            // Generate Sequence Number Registration ID (REG-SESSION-001 format)
+            const sessionRegsCount = registrations.filter(r => r.sessionId === sessionId).length;
+            const sequenceNumber = String(sessionRegsCount + 1).padStart(3, '0');
+            const customRegId = `REG-${sessionId}-${sequenceNumber}`;
+
+            const regData = {
+                id: customRegId, // New format
+                sessionId: sessionId,
+                sessionName: currentSessionForReg.title,
+                name: document.getElementById('regName').value,
+                mobile: document.getElementById('regMobile').value,
+                email: document.getElementById('regEmail').value,
+                date: new Date().toLocaleString(),
+                attended: false // Sets default attendance to false
+            };
+
+            // Save to LocalStorage
+            registrations.push(regData);
+            localStorage.setItem('aj_registrations', JSON.stringify(registrations));
+
+            // Await the PDF Generation (which now builds a real QR Code)
+            await generatePDFTicket(regData, currentSessionForReg);
+            
+            btn.innerHTML = 'Complete Registration & Get Ticket';
+            btn.disabled = false;
+            
+            this.reset();
+            registerModal.hide();
+            
+            alert('Registration Successful! Your scannable ticket has been downloaded.');
+        });
+
+        async function generatePDFTicket(user, session) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
+
+            const darkBlue = [10, 25, 47];
+            const gold = [212, 175, 55];
+            const white = [255, 255, 255];
+
+            // Background & Borders
+            doc.setFillColor(darkBlue[0], darkBlue[1], darkBlue[2]);
+            doc.rect(0, 0, 148, 210, 'F');
+            doc.setDrawColor(gold[0], gold[1], gold[2]);
+            doc.setLineWidth(1);
+            doc.rect(5, 5, 138, 200);
+            doc.rect(7, 7, 134, 196);
+
+            // Header Text
+            doc.setTextColor(gold[0], gold[1], gold[2]);
+            doc.setFontSize(22);
+            doc.setFont("helvetica", "bold");
+            doc.text("ANAND JYOTI", 74, 25, null, null, "center");
+            
+            doc.setTextColor(white[0], white[1], white[2]);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("Certified Life Coach", 74, 32, null, null, "center");
+            
+            doc.setDrawColor(gold[0], gold[1], gold[2]);
+            doc.line(20, 38, 128, 38);
+
+            // Ticket Details
+            doc.setTextColor(gold[0], gold[1], gold[2]);
+            doc.setFontSize(16);
+            doc.text("OFFICIAL ENTRY TICKET", 74, 50, null, null, "center");
+
+            doc.setTextColor(white[0], white[1], white[2]);
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            
+            const splitTitle = doc.splitTextToSize(session.title, 110);
+            doc.text(splitTitle, 74, 65, null, null, "center");
+            
+            let yOffset = 65 + (splitTitle.length * 7);
+
+            doc.setDrawColor(255, 255, 255);
+            doc.setLineWidth(0.2);
+            doc.roundedRect(15, yOffset, 118, 50, 3, 3, 'S');
+
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            
+            doc.text("Name:", 20, yOffset + 10);
+            doc.setFont("helvetica", "bold");
+            doc.text(user.name, 40, yOffset + 10);
+            
+            doc.setFont("helvetica", "normal");
+            doc.text("Ticket No:", 20, yOffset + 20);
+            doc.setFont("helvetica", "bold");
+            doc.text(user.id, 45, yOffset + 20);
+
+            doc.setFont("helvetica", "normal");
+            doc.text("Date:", 20, yOffset + 30);
+            doc.setFont("helvetica", "bold");
+            doc.text(session.date + " | " + session.time, 35, yOffset + 30);
+
+            doc.setFont("helvetica", "normal");
+            doc.text("Venue:", 20, yOffset + 40);
+            doc.setFont("helvetica", "bold");
+            const splitVenue = doc.splitTextToSize(session.venue, 80);
+            doc.text(splitVenue, 38, yOffset + 40);
+
+            // --- GENERATE REAL SCANNABLE QR CODE ---
+            try {
+                // Generate QR Code containing the Registration ID
+                const qrDataUrl = await QRCode.toDataURL(user.id, {
+                    errorCorrectionLevel: 'H',
+                    type: 'image/png',
+                    margin: 1,
+                    width: 150
+                });
+                
+                // Add the generated Base64 QR code image to the PDF
+                doc.addImage(qrDataUrl, 'PNG', 54, yOffset + 60, 40, 40);
+                
+            } catch (err) {
+                console.error('Failed to generate QR Code', err);
+            }
+
+            doc.setTextColor(gold[0], gold[1], gold[2]);
+            doc.setFontSize(9);
+            doc.text("SCAN FOR ATTENDANCE", 74, yOffset + 106, null, null, "center");
+
+            doc.setTextColor(200, 200, 200);
+            doc.setFontSize(8);
+            doc.text("Please carry this ticket (digital or printed) to the venue.", 74, 195, null, null, "center");
+
+            doc.save(`AnandJyoti_Ticket_${user.name.replace(/\s+/g, '_')}.pdf`);
+        }
+
+        // --- WhatsApp Contact Form Logic ---
+        function sendToWhatsApp(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('contactName').value;
+            const phone = document.getElementById('contactPhone').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            // Target WhatsApp Number (without '+' sign)
+            const whatsappNumber = "919890196671";
+            
+            // Pre-fill message formatting
+            const whatsappMessage = `Hello Anand Jyoti Team,%0A%0AI have an inquiry from the website:%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Email:* ${email}%0A%0A*Message:*%0A${message}`;
+            
+            // Create WhatsApp API URL
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
+            
+            // Open in new tab/window
+            window.open(whatsappUrl, '_blank');
+            
+            // Clear the form fields after sending
+            event.target.reset();
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', loadFrontendData);
+
+    </script>
+</body>
+</html>
