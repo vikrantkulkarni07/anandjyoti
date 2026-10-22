@@ -137,8 +137,6 @@
         .nav-inner {
             padding: 15px 15px;
             transition: all 0.4s ease;
-            width: 100%;
-            margin: 0 auto;
         }
         .navbar.scrolled .nav-inner {
             padding-top: 10px;
@@ -223,7 +221,6 @@
             height: auto;
             max-height: 70vh;
             object-fit: contain;
-            /* Completely removed drop-shadow to prevent any dark rendering around the PNG */
             animation: floating 6s ease-in-out infinite;
             background-color: transparent !important;
         }
@@ -415,14 +412,67 @@
             transform: translateY(-5px);
         }
 
-        /* --- Responsive --- */
+        /* =========================================================
+           MOBILE RESPONSIVENESS FIXES
+           ========================================================= */
         @media (max-width: 991px) {
-            .hero-section { padding-top: 150px; }
-            .hero-title { font-size: 2.8rem; }
-            .hero-section { text-align: center; }
-            .hero-img { max-height: 45vh; margin-top: 20px; } 
-            .hero-slogan { border-left: none; border-top: 3px solid var(--primary-gold); padding-top: 15px; margin-inline: auto; }
-            .navbar-collapse { background: var(--secondary-dark); padding: 20px; border-radius: 10px; margin-top: 10px; }
+            .navbar-collapse { 
+                background: rgba(5, 11, 20, 0.98); 
+                padding: 20px; 
+                border-radius: 10px; 
+                margin-top: 15px;
+                border: 1px solid var(--glass-border);
+            }
+            .nav-item.ms-lg-3 { margin-top: 15px !important; text-align: center; }
+            .hero-section { 
+                display: block; /* Fixes vertical centering overlap/clipping on mobile */
+                padding-top: 160px; /* Accounts for navbar & marquee */
+                text-align: center; 
+                min-height: auto; 
+                padding-bottom: 100px; /* Extra space so wave doesn't cut the image */
+            }
+            .hero-title { font-size: 3.2rem; }
+            .hero-subtitle { font-size: 1.5rem; }
+            .hero-img { max-height: 40vh; margin-top: 30px; }
+            .hero-slogan { 
+                border-left: none; 
+                border-top: 2px solid var(--primary-gold); 
+                padding-top: 15px; 
+                margin: 25px auto 0; 
+                display: inline-block;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .section-padding { padding: 60px 0; }
+            .section-title { font-size: 2rem; }
+            .section-subtitle { font-size: 0.95rem; margin-bottom: 40px; }
+            
+            .hero-title { font-size: 2.4rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .hero-img { max-height: 40vh; margin-top: 30px; }
+            
+            /* Buttons stack on mobile */
+            .hero-section .d-flex { flex-direction: column; width: 100%; gap: 15px !important; }
+            .hero-section .btn-gold, .hero-section .btn-outline-gold { width: 100%; }
+
+            /* Fix Modals for small screens */
+            .modal-body { padding: 1.5rem !important; }
+            #sessionModalBody h2 { font-size: 1.8rem !important; }
+            .modal-dialog { margin: 10px; }
+            
+            /* Adjust Marquee text size */
+            .top-marquee { font-size: 0.8rem; }
+            
+            /* Smaller Gallery images on mobile to fit 2 columns nicely */
+            .gallery-item img { height: 150px; }
+            
+            /* Wave divider scaling */
+            .wave-divider svg { height: 35px; }
+
+            /* Service icons margin fix */
+            .service-icon { width: 60px; height: 60px; font-size: 24px; }
+            .glass-card { padding: 25px 20px; }
         }
     </style>
 </head>
@@ -430,7 +480,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top p-0 flex-column" id="mainNav">
-        <div class="container nav-inner d-flex align-items-center justify-content-between">
+        <div class="container nav-inner">
             <a class="navbar-brand" href="#">
                 <img src="images/logo.png" alt="Anand Jyoti Logo" style="background-color: transparent !important; border: none; box-shadow: none; object-fit: contain;">
             </a>
@@ -453,8 +503,8 @@
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                        <a href="#sessions" class="btn-gold px-4 py-2" style="font-size: 0.9rem;">Register Now</a>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0 w-100 text-center">
+                        <a href="#sessions" class="btn-gold px-4 py-2 w-100" style="font-size: 0.9rem;">Register Now</a>
                     </li>
                 </ul>
             </div>
@@ -477,7 +527,7 @@
                 <div class="col-lg-7" data-aos="fade-right" data-aos-duration="1500">
                     <h1 class="hero-title"><span class="text-gold-gradient">ANAND JYOTI</span></h1>
                     <h2 class="hero-subtitle">Certified Life Coach</h2>
-                    <p class="lead text-gray mb-4" style="max-width: 500px;">
+                    <p class="lead text-gray mb-4 mx-auto mx-lg-0" style="max-width: 500px;">
                         Helping You Transform <br>
                         <strong class="text-white">Relationships • Career • Financial Life • Healing • Personal Growth</strong>
                     </p>
@@ -514,23 +564,23 @@
             <div class="row align-items-center">
                 <!-- Completely removed the div generating a gold blurred background behind the image -->
                 <div class="col-lg-5 mb-5 mb-lg-0 text-center" data-aos="fade-right">
-                    <img src="images/sir.png" alt="Anand Labade" class="img-fluid" style="background-color: transparent !important; border: none; box-shadow: none; object-fit: contain;">
+                    <img src="images/sir.png" alt="Anand Labade" class="img-fluid" style="background-color: transparent !important; border: none; box-shadow: none; object-fit: contain; max-height: 500px;">
                 </div>
                 <div class="col-lg-7 ps-lg-5" data-aos="fade-left">
-                    <h5 class="text-gold mb-2">About The Coach</h5>
-                    <h2 class="section-title text-start mb-4">Meet <span class="text-gold-gradient">Anand Labade</span></h2>
-                    <p class="lead mb-4">Anand Labade is a highly sought-after Certified Life Coach, dedicated to empowering individuals to break through their limitations and achieve holistic success.</p>
+                    <h5 class="text-gold mb-2 text-center text-lg-start">About The Coach</h5>
+                    <h2 class="section-title text-center text-lg-start mb-4">Meet <span class="text-gold-gradient">Anand Labade</span></h2>
+                    <p class="lead mb-4 text-center text-lg-start">Anand Labade is a highly sought-after Certified Life Coach, dedicated to empowering individuals to break through their limitations and achieve holistic success.</p>
                     
                     <div class="row g-4 mt-2">
                         <div class="col-md-6">
-                            <div class="glass-card p-4 h-100">
+                            <div class="glass-card p-4 h-100 text-center text-md-start">
                                 <i class="fas fa-eye text-gold fs-2 mb-3"></i>
                                 <h4 class="h5">Our Vision</h4>
                                 <p class="text-gray mb-0 small">To create a world where every individual awakens their inner potential, living a life of profound joy, prosperity, and purpose.</p>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="glass-card p-4 h-100">
+                            <div class="glass-card p-4 h-100 text-center text-md-start">
                                 <i class="fas fa-bullseye text-gold fs-2 mb-3"></i>
                                 <h4 class="h5">Our Mission</h4>
                                 <p class="text-gray mb-0 small">To provide transformative coaching that heals past traumas, rebuilds relationships, and paves the path for financial and career excellence.</p>
@@ -636,25 +686,25 @@
         <div class="container">
             <div class="row g-5">
                 <div class="col-lg-5" data-aos="fade-right">
-                    <h2 class="section-title text-start">Get In <span class="text-gold-gradient">Touch</span></h2>
-                    <p class="text-gray mb-5">Ready to transform your life? Reach out to our support team to book a private consultation or inquire about our programs.</p>
+                    <h2 class="section-title text-center text-lg-start">Get In <span class="text-gold-gradient">Touch</span></h2>
+                    <p class="text-gray mb-5 text-center text-lg-start">Ready to transform your life? Reach out to our support team to book a private consultation or inquire about our programs.</p>
                     
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="service-icon mb-0 me-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-phone-alt"></i></div>
+                    <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start mb-4">
+                        <div class="service-icon mb-3 mb-sm-0 me-sm-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-phone-alt"></i></div>
                         <div>
                             <h5 class="mb-1">Call Us</h5>
-                            <p class="text-gray mb-0">+91 98901 96671</p>
+                            <p class="text-gray mb-0">+91 98901 90671</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="service-icon mb-0 me-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-envelope"></i></div>
+                    <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start mb-4">
+                        <div class="service-icon mb-3 mb-sm-0 me-sm-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-envelope"></i></div>
                         <div>
                             <h5 class="mb-1">Email Us</h5>
                             <p class="text-gray mb-0">contact@anandjyoti.com</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <div class="service-icon mb-0 me-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
+                        <div class="service-icon mb-3 mb-sm-0 me-sm-4 flex-shrink-0" style="width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-map-marker-alt"></i></div>
                         <div>
                             <h5 class="mb-1">Location</h5>
                             <p class="text-gray mb-0">Pune, Maharashtra, India</p>
@@ -663,7 +713,7 @@
                 </div>
                 <div class="col-lg-7" data-aos="fade-left">
                     <div class="glass-card">
-                        <h4 class="mb-4">Send a Message</h4>
+                        <h4 class="mb-4 text-center text-sm-start">Send a Message</h4>
                         <form onsubmit="sendToWhatsApp(event)">
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -683,7 +733,7 @@
                                     <textarea id="contactMessage" class="form-control" rows="4" required></textarea>
                                 </div>
                                 <div class="col-12 mt-4">
-                                    <button type="submit" class="btn-gold w-100">Send Message via WhatsApp <i class="fab fa-whatsapp ms-2"></i></button>
+                                    <button type="submit" class="btn-gold w-100">Send via WhatsApp <i class="fab fa-whatsapp ms-2"></i></button>
                                 </div>
                             </div>
                         </form>
@@ -696,9 +746,9 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="row g-4 mb-5">
+            <div class="row g-4 mb-5 text-center text-md-start">
                 <div class="col-lg-4">
-                    <img src="images/logo.png" alt="Logo" class="mb-3" style="height: 60px; background-color: transparent !important; border: none; box-shadow: none; object-fit: contain;">
+                    <img src="images/logo.png" alt="Logo" class="mb-3 mx-auto mx-md-0 d-block" style="height: 60px; background-color: transparent !important; border: none; box-shadow: none; object-fit: contain;">
                     <h4 class="text-gold-gradient mb-3">ANAND JYOTI</h4>
                     <p class="text-gray small">Enlightening the Flame of Joy & Prosperity Within You. Transform your life today with proven coaching methodologies.</p>
                 </div>
@@ -721,7 +771,7 @@
                 </div>
                 <div class="col-lg-3">
                     <h5 class="text-white mb-4">Connect</h5>
-                    <div class="social-links">
+                    <div class="social-links justify-content-center justify-content-md-start d-flex">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-youtube"></i></a>
@@ -791,7 +841,15 @@
     <!-- QRCode JS Library for real scannable QR Code generation -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
+        // Supabase Initialization
+        var supabaseUrl = 'https://xxnxlzqahwjmfiyyzozb.supabase.co/rest/v1/';
+        var supabaseKey = 'sb_publishable_8z_n_fI3Sb1QyVZ5g9kZkA_3xkAdb3g';
+        var supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
         // Initialize Animations
         AOS.init({ once: true, offset: 50 });
 
@@ -802,37 +860,19 @@
             else nav.classList.remove('scrolled');
         });
 
-        // --- Data Loading & Rendering ---
-        
-        function getSessions() {
-            return JSON.parse(localStorage.getItem('aj_sessions')) || [];
-        }
+        // --- Data Loading & Rendering from Supabase ---
 
-        // Add Mock Data if empty
-        if(getSessions().length === 0) {
-            const mockSession = [{
-                id: "SES" + Date.now().toString(),
-                image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1000',
-                title: 'The Ultimate Healing Masterclass',
-                description: 'A 3-hour intensive workshop designed to clear mental blocks and manifest abundance.',
-                agenda: '1. Introduction to Inner Healing\n2. Identifying Subconscious Blocks\n3. The Meditation Process\n4. Q&A',
-                benefits: 'Overcome anxiety, build unshakable confidence, learn daily meditation practices.',
-                date: '2026-08-15',
-                time: '10:00 AM',
-                venue: 'Grand Hyatt, Pune',
-                seats: '50',
-                status: 'Active'
-            }];
-            localStorage.setItem('aj_sessions', JSON.stringify(mockSession));
-        }
-
-        function loadFrontendData() {
-            const sessions = getSessions().filter(s => s.status === 'Active');
+        async function loadFrontendData() {
+            // 1. Fetch Sessions
+            const { data: sessions, error: sessErr } = await supabaseClient
+                .from('sessions')
+                .select('*')
+                .eq('status', 'Active');
             
             const container = document.getElementById('sessionsContainer');
             const noMsg = document.getElementById('noSessionsMsg');
             
-            if(sessions.length > 0) {
+            if(sessions && sessions.length > 0) {
                 noMsg.style.display = 'none';
                 container.innerHTML = '';
                 
@@ -863,15 +903,19 @@
                 });
             }
 
+            // 2. Render Navbar Dropdown
             const navDrop = document.getElementById('navSessionDropdown');
             navDrop.innerHTML = '';
-            sessions.slice(0, 3).forEach(s => {
-                navDrop.innerHTML += `<li><a class="dropdown-item" href="javascript:void(0)" onclick="openSessionModal('${s.id}')">${s.title}</a></li>`;
-            });
+            if(sessions) {
+                sessions.slice(0, 3).forEach(s => {
+                    navDrop.innerHTML += `<li><a class="dropdown-item" href="javascript:void(0)" onclick="openSessionModal('${s.id}')">${s.title}</a></li>`;
+                });
+            }
             navDrop.innerHTML += `<li><hr class="dropdown-divider bg-secondary"></li><li><a class="dropdown-item text-gold" href="#sessions">View All</a></li>`;
 
+            // 3. Render Ticker
             const tickerWrap = document.getElementById('tickerWrap');
-            if(sessions.length > 0) {
+            if(sessions && sessions.length > 0) {
                 let tickerStr = '';
                 sessions.forEach(s => {
                     tickerStr += `<span class="ticker-item">🔥 Upcoming: ${s.title} on ${s.date} - <a href="javascript:void(0)" onclick="openSessionModal('${s.id}')" class="text-dark text-decoration-underline">Register Now</a></span>`;
@@ -879,18 +923,19 @@
                 tickerWrap.innerHTML = tickerStr + tickerStr; 
             }
 
-            const gallery = JSON.parse(localStorage.getItem('aj_gallery')) || [];
+            // 4. Fetch & Render Gallery
+            const { data: gallery, error: galErr } = await supabaseClient.from('gallery').select('*');
             const galContainer = document.getElementById('galleryContainer');
             const noGalMsg = document.getElementById('noGalleryMsg');
             
-            if(gallery.length > 0) {
+            if(gallery && gallery.length > 0) {
                 noGalMsg.style.display = 'none';
                 galContainer.innerHTML = '';
-                gallery.forEach(imgData => {
+                gallery.forEach(imgObj => {
                     galContainer.innerHTML += `
                         <div class="col-lg-3 col-md-4 col-6" data-aos="zoom-in">
-                            <div class="gallery-item" onclick="window.open('${imgData}', '_blank')">
-                                <img src="${imgData}" alt="Workshop Memory">
+                            <div class="gallery-item" onclick="window.open('${imgObj.image_data}', '_blank')">
+                                <img src="${imgObj.image_data}" alt="Workshop Memory">
                             </div>
                         </div>
                     `;
@@ -899,12 +944,12 @@
         }
 
         let currentSessionForReg = null;
-        const sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'));
-        const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+        let sessionModal;
+        let registerModal;
 
-        window.openSessionModal = function(id) {
-            const sessions = getSessions();
-            const s = sessions.find(x => x.id === id);
+        window.openSessionModal = async function(id) {
+            // Fetch single session dynamically
+            const { data: s } = await supabaseClient.from('sessions').select('*').eq('id', id).single();
             if(!s) return;
             
             currentSessionForReg = s;
@@ -950,29 +995,39 @@
             btn.disabled = true;
 
             const sessionId = document.getElementById('regSessionId').value;
-            let registrations = JSON.parse(localStorage.getItem('aj_registrations')) || [];
             
-            // Generate Sequence Number Registration ID (REG-SESSION-001 format)
-            const sessionRegsCount = registrations.filter(r => r.sessionId === sessionId).length;
-            const sequenceNumber = String(sessionRegsCount + 1).padStart(3, '0');
+            // Get count to generate Sequence Number (REG-SESSION-001 format)
+            const { count } = await supabaseClient
+                .from('registrations')
+                .select('*', { count: 'exact', head: true })
+                .eq('session_id', sessionId);
+                
+            const sequenceNumber = String((count || 0) + 1).padStart(3, '0');
             const customRegId = `REG-${sessionId}-${sequenceNumber}`;
 
             const regData = {
-                id: customRegId, // New format
-                sessionId: sessionId,
-                sessionName: currentSessionForReg.title,
+                id: customRegId,
+                session_id: sessionId,
+                session_name: currentSessionForReg.title,
                 name: document.getElementById('regName').value,
                 mobile: document.getElementById('regMobile').value,
                 email: document.getElementById('regEmail').value,
                 date: new Date().toLocaleString(),
-                attended: false // Sets default attendance to false
+                attended: false
             };
 
-            // Save to LocalStorage
-            registrations.push(regData);
-            localStorage.setItem('aj_registrations', JSON.stringify(registrations));
+            // Save to Supabase Cloud
+            const { error } = await supabaseClient.from('registrations').insert([regData]);
+            
+            if(error) {
+                console.error(error);
+                alert("Failed to register. Please try again.");
+                btn.innerHTML = 'Complete Registration & Get Ticket';
+                btn.disabled = false;
+                return;
+            }
 
-            // Await the PDF Generation (which now builds a real QR Code)
+            // Await the PDF Generation
             await generatePDFTicket(regData, currentSessionForReg);
             
             btn.innerHTML = 'Complete Registration & Get Ticket';
@@ -1092,24 +1147,19 @@
             const email = document.getElementById('contactEmail').value;
             const message = document.getElementById('contactMessage').value;
             
-            // Target WhatsApp Number (without '+' sign)
-            const whatsappNumber = "919890196671";
-            
-            // Pre-fill message formatting
+            const whatsappNumber = "919890190671";
             const whatsappMessage = `Hello Anand Jyoti Team,%0A%0AI have an inquiry from the website:%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Email:* ${email}%0A%0A*Message:*%0A${message}`;
             
-            // Create WhatsApp API URL
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
-            
-            // Open in new tab/window
-            window.open(whatsappUrl, '_blank');
-            
-            // Clear the form fields after sending
+            window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`, '_blank');
             event.target.reset();
         }
 
         // Init
-        document.addEventListener('DOMContentLoaded', loadFrontendData);
+        document.addEventListener('DOMContentLoaded', () => {
+            sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'));
+            registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+            loadFrontendData();
+        });
 
     </script>
 </body>
