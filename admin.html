@@ -136,7 +136,6 @@
             .main-content { margin-left: 0; }
         }
 
-        /* Overrides for HTML5 QR Code Reader UI */
         #qr-reader { border: none !important; border-radius: 10px; overflow: hidden; }
         #qr-reader__scan_region { background: var(--primary-bg); }
         #qr-reader__dashboard_section_csr button {
@@ -244,7 +243,6 @@
                             
                             <h5 class="mt-5 mb-3">Recently Scanned Tickets</h5>
                             <ul class="list-group" id="recentScansList">
-                                <!-- Populated by JS -->
                                 <li class="list-group-item bg-transparent text-muted text-center border-secondary">No recent scans</li>
                             </ul>
                         </div>
@@ -325,7 +323,7 @@
                     <h2>Manage Gallery</h2>
                     <div>
                         <input type="file" id="galleryUpload" accept="image/*" class="d-none" onchange="handleGalleryUpload(event)" multiple>
-                        <button class="btn btn-gold" onclick="document.getElementById('galleryUpload').click()"><i class="fas fa-upload"></i> Upload Images</button>
+                        <button class="btn btn-gold" id="btnUploadGallery" onclick="document.getElementById('galleryUpload').click()"><i class="fas fa-upload"></i> Upload Images</button>
                     </div>
                 </div>
 
@@ -354,7 +352,7 @@
                             <div class="col-12">
                                 <label class="form-label">Session Image (Banner)</label>
                                 <input type="file" class="form-control" id="formImage" accept="image/*">
-                                <small class="text-muted">Leave empty to keep existing image.</small>
+                                <small class="text-muted">Leave empty to keep existing image. Will be uploaded to Cloud Storage.</small>
                                 <input type="hidden" id="formExistingImage">
                             </div>
                             <div class="col-md-12">
@@ -401,7 +399,7 @@
                         
                         <div class="mt-4 text-end">
                             <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-gold">Save Session</button>
+                            <button type="submit" class="btn btn-gold" id="btnSaveSession">Save Session</button>
                         </div>
                     </form>
                 </div>
@@ -409,13 +407,25 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
-    <!-- HTML5 QR Code Library for Scanner UI -->
+    <!-- HTML5 QR Code Library -->
     <script src="https://unpkg.com/html5-qrcode"></script>
 
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
+        // Supabase Initialization
+        var supabaseUrl = 'https://xxnxlzqahwjmfiyyzozb.supabase.co/rest/v1/';
+        var supabaseKey = 'sb_publishable_8z_n_fI3Sb1QyVZ5g9kZkA_3xkAdb3g';
+        var supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // BUCKET NAME CONFIGURATION (Must match the bucket created in Supabase Dashboard)
+        const STORAGE_BUCKET = 'anandjyoti_bucket';
+
         // --- Authentication ---
         function checkLogin() {
             const pwd = document.getElementById('adminPassword').value;
@@ -448,11 +458,9 @@
             document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
             document.getElementById('nav-' + secId.split('-')[1]).classList.add('active');
 
-            // Handle Camera Initialization strictly when entering scanner tab
             if(secId === 'sec-scanner') {
                 initScanner();
             } else if(html5QrcodeScanner) {
-                // Clear camera when leaving tab to save battery
                 html5QrcodeScanner.clear().catch(e => console.error("Failed to clear scanner", e));
                 html5QrcodeScanner = null;
             }
@@ -464,10 +472,16 @@
         let gallery = [];
         let recentScans = [];
 
-        function initDashboard() {
-            sessions = JSON.parse(localStorage.getItem('aj_sessions')) || [];
-            registrations = JSON.parse(localStorage.getItem('aj_registrations')) || [];
-            gallery = JSON.parse(localStorage.getItem('aj_gallery')) || [];
+        async function initDashboard() {
+            const [sRes, rRes, gRes] = await Promise.all([
+                supabaseClient.from('sessions').select('*'),
+                supabaseClient.from('registrations').select('*'),
+                supabaseClient.from('gallery').select('*')
+            ]);
+            
+            sessions = sRes.data || [];
+            registrations = rRes.data || [];
+            gallery = gRes.data || [];
             
             updateStats();
             renderSessions();
@@ -484,7 +498,6 @@
         }
 
         // --- TICKETING & QR SCANNER LOGIC ---
-
         let html5QrcodeScanner = null;
         let isProcessingScan = false;
 
@@ -500,18 +513,14 @@
         }
 
         function onScanSuccess(decodedText, decodedResult) {
-            if (isProcessingScan) return; // Prevent multiple fires
+            if (isProcessingScan) return; 
             isProcessingScan = true;
 
             processTicketScan(decodedText);
-
-            // Delay next scan slightly
             setTimeout(() => { isProcessingScan = false; }, 2000);
         }
 
-        function onScanFailure(error) {
-            // Background noise, ignoring
-        }
+        function onScanFailure(error) { }
 
         function manualScanVerify() {
             const input = document.getElementById('manualTicketInput').value.trim();
@@ -521,7 +530,7 @@
             }
         }
 
-        function processTicketScan(ticketId) {
+        async function processTicketScan(ticketId) {
             let resultDiv = document.getElementById('scanResult');
             let index = registrations.findIndex(r => r.id === ticketId);
 
@@ -529,35 +538,35 @@
                 const ticket = registrations[index];
                 
                 if (ticket.attended) {
-                    // Already Scanned / Used
                     resultDiv.innerHTML = `
                         <div class="alert alert-warning border-warning">
                             <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> WARNING: TICKET USED!</h4>
-                            <p class="mb-0">Ticket ID: <b>${ticketId}</b> belongs to <b>${ticket.name}</b>, but it was already scanned and marked attended.</p>
+                            <p class="mb-0">Ticket ID: <b>${ticketId}</b> belongs to <b>${ticket.name}</b>, but it was already scanned.</p>
                         </div>
                     `;
                 } else {
-                    // Valid Scan -> Mark Attended
-                    registrations[index].attended = true;
-                    localStorage.setItem('aj_registrations', JSON.stringify(registrations));
+                    const { error } = await supabaseClient
+                        .from('registrations')
+                        .update({ attended: true })
+                        .eq('id', ticketId);
                     
-                    resultDiv.innerHTML = `
-                        <div class="alert alert-success border-success">
-                            <h4 class="alert-heading"><i class="fas fa-check-circle"></i> ACCESS GRANTED!</h4>
-                            <p class="mb-0">Ticket verified for <b>${ticket.name}</b>.</p>
-                            <small>Session: ${ticket.sessionName}</small>
-                        </div>
-                    `;
-                    
-                    // Add to recent list
-                    addRecentScan(ticket.name, ticketId, 'Success');
-                    
-                    // Update lists
-                    updateStats();
-                    renderRegistrations();
+                    if(!error) {
+                        registrations[index].attended = true;
+                        resultDiv.innerHTML = `
+                            <div class="alert alert-success border-success">
+                                <h4 class="alert-heading"><i class="fas fa-check-circle"></i> ACCESS GRANTED!</h4>
+                                <p class="mb-0">Ticket verified for <b>${ticket.name}</b>.</p>
+                                <small>Session: ${ticket.session_name}</small>
+                            </div>
+                        `;
+                        addRecentScan(ticket.name, ticketId, 'Success');
+                        updateStats();
+                        renderRegistrations();
+                    } else {
+                        alert("Database error updating ticket.");
+                    }
                 }
             } else {
-                // Invalid / Fake Ticket
                 resultDiv.innerHTML = `
                     <div class="alert alert-danger border-danger">
                         <h4 class="alert-heading"><i class="fas fa-times-circle"></i> ERROR: INVALID TICKET</h4>
@@ -575,23 +584,17 @@
             ul.innerHTML = '';
             recentScans.forEach(scan => {
                 ul.innerHTML += `<li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>${scan.name}</strong><br>
-                        <small class="text-muted">${scan.id}</small>
-                    </div>
+                    <div><strong>${scan.name}</strong><br><small class="text-muted">${scan.id}</small></div>
                     <span class="badge bg-success">${scan.time}</span>
                 </li>`;
             });
         }
 
         // --- Registrations Data Logic ---
-
         function populateSessionFilter() {
             const filter = document.getElementById('filterSession');
             filter.innerHTML = '<option value="ALL">All Sessions</option>';
-            sessions.forEach(s => {
-                filter.innerHTML += `<option value="${s.id}">${s.title} (${s.date})</option>`;
-            });
+            sessions.forEach(s => { filter.innerHTML += `<option value="${s.id}">${s.title} (${s.date})</option>`; });
         }
 
         function renderRegistrations() {
@@ -601,16 +604,9 @@
             tbody.innerHTML = '';
             
             let filteredRegs = registrations;
-            
-            if(sessionFilter !== 'ALL') {
-                filteredRegs = filteredRegs.filter(r => r.sessionId === sessionFilter);
-            }
-
-            if(statusFilter === 'ATTENDED') {
-                filteredRegs = filteredRegs.filter(r => r.attended === true);
-            } else if (statusFilter === 'PENDING') {
-                filteredRegs = filteredRegs.filter(r => r.attended !== true);
-            }
+            if(sessionFilter !== 'ALL') filteredRegs = filteredRegs.filter(r => r.session_id === sessionFilter);
+            if(statusFilter === 'ATTENDED') filteredRegs = filteredRegs.filter(r => r.attended === true);
+            else if (statusFilter === 'PENDING') filteredRegs = filteredRegs.filter(r => r.attended !== true);
 
             filteredRegs.slice().reverse().forEach(r => {
                 const attendedBadge = r.attended 
@@ -622,55 +618,40 @@
                         <td><small class="text-gold">${r.id}</small></td>
                         <td class="fw-bold">${r.name}</td>
                         <td>${r.mobile}</td>
-                        <td><small>${r.sessionName}</small></td>
+                        <td><small>${r.session_name}</small></td>
                         <td>${attendedBadge}</td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteReg('${r.id}')"><i class="fas fa-trash"></i></button>
-                        </td>
+                        <td><button class="btn btn-sm btn-outline-danger" onclick="deleteReg('${r.id}')"><i class="fas fa-trash"></i></button></td>
                     </tr>
                 `;
             });
-
-            if (filteredRegs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">No participants found for this criteria.</td></tr>`;
-            }
         }
 
-        function deleteReg(id) {
+        async function deleteReg(id) {
             if(confirm('Delete this registration?')) {
-                registrations = registrations.filter(x => x.id !== id);
-                localStorage.setItem('aj_registrations', JSON.stringify(registrations));
+                await supabaseClient.from('registrations').delete().eq('id', id);
                 initDashboard();
             }
         }
 
         function exportToExcel() {
-            if(registrations.length === 0) {
-                alert("No registrations to export.");
-                return;
-            }
+            if(registrations.length === 0) return alert("No registrations to export.");
             
             const sessionFilter = document.getElementById('filterSession').value;
-            const statusFilter = document.getElementById('filterStatus').value;
-            
             let dataToExport = registrations;
             let fileName = 'All_Registrations.xlsx';
             
             if(sessionFilter !== 'ALL') {
-                dataToExport = dataToExport.filter(r => r.sessionId === sessionFilter);
+                dataToExport = dataToExport.filter(r => r.session_id === sessionFilter);
                 const s = sessions.find(x => x.id === sessionFilter);
                 if(s) fileName = `${s.title.replace(/\s+/g, '_')}_Regs.xlsx`;
             }
-
-            if(statusFilter === 'ATTENDED') dataToExport = dataToExport.filter(r => r.attended === true);
-            if(statusFilter === 'PENDING') dataToExport = dataToExport.filter(r => r.attended !== true);
 
             const wsData = dataToExport.map(r => ({
                 "Registration ID": r.id,
                 "Name": r.name,
                 "Mobile": r.mobile,
                 "Email": r.email,
-                "Session": r.sessionName,
+                "Session": r.session_name,
                 "Date Registered": r.date,
                 "Attendance Status": r.attended ? "ATTENDED (Scanned)" : "Pending"
             }));
@@ -682,8 +663,7 @@
         }
 
         // --- Sessions Logic ---
-
-        const sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'));
+        let sessionModal;
 
         function renderSessions() {
             const tbody = document.getElementById('sessionsTableBody');
@@ -734,61 +714,14 @@
             sessionModal.show();
         }
 
-        function deleteSession(id) {
+        async function deleteSession(id) {
             if(confirm('Delete this session? Past registrations won\'t be affected.')) {
-                sessions = sessions.filter(x => x.id !== id);
-                localStorage.setItem('aj_sessions', JSON.stringify(sessions));
+                await supabaseClient.from('sessions').delete().eq('id', id);
                 initDashboard();
             }
         }
 
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
-
-        document.getElementById('sessionForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const fileInput = document.getElementById('formImage');
-            let imageUrl = document.getElementById('formExistingImage').value;
-
-            if (fileInput.files.length > 0) {
-                imageUrl = await fileToBase64(fileInput.files[0]);
-            } else if (!imageUrl) {
-                imageUrl = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1000';
-            }
-
-            const id = document.getElementById('formSessionId').value || 'SES' + Date.now();
-            
-            const sessionData = {
-                id: id,
-                image: imageUrl,
-                title: document.getElementById('formTitle').value,
-                date: document.getElementById('formDate').value,
-                time: document.getElementById('formTime').value,
-                venue: document.getElementById('formVenue').value,
-                seats: document.getElementById('formSeats').value,
-                status: document.getElementById('formStatus').value,
-                description: document.getElementById('formDesc').value,
-                agenda: document.getElementById('formAgenda').value,
-                benefits: document.getElementById('formBenefits').value
-            };
-
-            const index = sessions.findIndex(x => x.id === id);
-            if(index > -1) { sessions[index] = sessionData; } 
-            else { sessions.push(sessionData); }
-
-            localStorage.setItem('aj_sessions', JSON.stringify(sessions));
-            sessionModal.hide();
-            initDashboard();
-        });
-
-        // --- Gallery ---
+        // --- Gallery & Cloud Storage Logic ---
 
         function renderGallery() {
             const grid = document.getElementById('galleryGrid');
@@ -799,66 +732,146 @@
                 return;
             }
 
-            gallery.forEach((imgData, index) => {
+            gallery.forEach((imgObj) => {
                 grid.innerHTML += `
                     <div class="col-lg-3 col-md-4 col-6 text-center">
                         <div class="position-relative" style="background:var(--card-bg); padding:10px; border-radius:15px; border:1px solid var(--border-color);">
-                            <img src="${imgData}" class="gallery-admin-img">
-                            <button class="btn btn-sm btn-danger w-100" onclick="deleteGalleryImage(${index})"><i class="fas fa-trash"></i> Delete</button>
+                            <img src="${imgObj.image_data}" class="gallery-admin-img">
+                            <button class="btn btn-sm btn-danger w-100" onclick="deleteGalleryImage('${imgObj.id}', '${imgObj.image_data}')"><i class="fas fa-trash"></i> Delete</button>
                         </div>
                     </div>
                 `;
             });
         }
 
+        // Upload images to Supabase Storage Bucket instead of Base64
         async function handleGalleryUpload(e) {
             const files = e.target.files;
             if(files.length === 0) return;
             
+            const btn = document.getElementById('btnUploadGallery');
+            const originalBtnHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            btn.disabled = true;
+
             for(let i=0; i<files.length; i++) {
                 try {
-                    let base64 = await compressImage(files[i]);
-                    gallery.push(base64);
-                } catch(err) { console.error("Error", err); }
+                    const file = files[i];
+                    // Create unique file name
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `gallery/${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+
+                    // 1. Upload to Storage Bucket
+                    const { data, error } = await supabaseClient.storage
+                        .from(STORAGE_BUCKET)
+                        .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+                    if (error) throw error;
+
+                    // 2. Get Public URL
+                    const { data: urlData } = supabaseClient.storage
+                        .from(STORAGE_BUCKET)
+                        .getPublicUrl(fileName);
+
+                    // 3. Save URL to database table
+                    await supabaseClient.from('gallery').insert([{ image_data: urlData.publicUrl }]);
+
+                } catch(err) { 
+                    console.error("Upload Error:", err); 
+                    alert("Failed to upload an image. Make sure your Supabase Bucket exists and allows public uploads."); 
+                }
             }
             
-            try {
-                localStorage.setItem('aj_gallery', JSON.stringify(gallery));
-                initDashboard();
-            } catch(e) {
-                alert("Storage Limit Exceeded! Delete some images first.");
-                gallery.pop(); 
-            }
-            e.target.value = '';
+            e.target.value = ''; // reset file input
+            btn.innerHTML = originalBtnHtml;
+            btn.disabled = false;
+            initDashboard();
         }
 
-        function deleteGalleryImage(index) {
+        async function deleteGalleryImage(id, imageUrl) {
             if(confirm("Delete this image?")) {
-                gallery.splice(index, 1);
-                localStorage.setItem('aj_gallery', JSON.stringify(gallery));
+                try {
+                    // Try to delete from Cloud Storage first if it's a bucket URL
+                    if (imageUrl.includes(STORAGE_BUCKET)) {
+                        const path = imageUrl.split(`${STORAGE_BUCKET}/`)[1];
+                        if(path) await supabaseClient.storage.from(STORAGE_BUCKET).remove([path]);
+                    }
+                } catch (err) { console.warn("Failed to delete cloud file, proceeding to delete DB record.", err); }
+
+                // Delete from DB
+                await supabaseClient.from('gallery').delete().eq('id', id);
                 initDashboard();
             }
         }
+        
+        // Session Form Submission (Includes Cloud Storage Image Upload)
+        document.addEventListener('DOMContentLoaded', () => {
+            const modalElem = document.getElementById('sessionModal');
+            if(modalElem) sessionModal = new bootstrap.Modal(modalElem);
 
-        function compressImage(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let w = img.width, h = img.height;
-                        if (w > h && w > 800) { h *= 800 / w; w = 800; } 
-                        else if (h > 800) { w *= 800 / h; h = 800; }
-                        canvas.width = w; canvas.height = h;
-                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', 0.7)); 
+            const sessionFormElem = document.getElementById('sessionForm');
+            if(sessionFormElem) {
+                sessionFormElem.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const btn = document.getElementById('btnSaveSession');
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    btn.disabled = true;
+
+                    const fileInput = document.getElementById('formImage');
+                    let imageUrl = document.getElementById('formExistingImage').value;
+
+                    // Handle Session Banner Upload to Cloud Storage
+                    if (fileInput.files.length > 0) {
+                        try {
+                            const file = fileInput.files[0];
+                            const fileExt = file.name.split('.').pop();
+                            const fileName = `sessions/${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+
+                            const { data, error } = await supabaseClient.storage
+                                .from(STORAGE_BUCKET)
+                                .upload(fileName, file);
+
+                            if (error) throw error;
+
+                            const { data: urlData } = supabaseClient.storage
+                                .from(STORAGE_BUCKET)
+                                .getPublicUrl(fileName);
+                                
+                            imageUrl = urlData.publicUrl;
+                        } catch (err) {
+                            console.error(err);
+                            alert("Failed to upload banner image. Saving without new image.");
+                        }
+                    } else if (!imageUrl) {
+                        imageUrl = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1000';
                     }
-                }
-            });
-        }
+
+                    const id = document.getElementById('formSessionId').value || 'SES' + Date.now();
+                    
+                    const sessionData = {
+                        id: id,
+                        image: imageUrl,
+                        title: document.getElementById('formTitle').value,
+                        date: document.getElementById('formDate').value,
+                        time: document.getElementById('formTime').value,
+                        venue: document.getElementById('formVenue').value,
+                        seats: document.getElementById('formSeats').value,
+                        status: document.getElementById('formStatus').value,
+                        description: document.getElementById('formDesc').value,
+                        agenda: document.getElementById('formAgenda').value,
+                        benefits: document.getElementById('formBenefits').value
+                    };
+
+                    await supabaseClient.from('sessions').upsert([sessionData]);
+                    
+                    btn.innerHTML = 'Save Session';
+                    btn.disabled = false;
+                    sessionModal.hide();
+                    initDashboard();
+                });
+            }
+        });
     </script>
 </body>
 </html>
